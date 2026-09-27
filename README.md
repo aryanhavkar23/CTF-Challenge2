@@ -34,7 +34,6 @@ Your task is to investigate the portal, understand its behavior, and recover the
 4. Follow the available evidence through the system.
 5. Recover the final incident report and obtain the flag.
 
-> Note: LLMs and AI assistants are allowed for this challenge.
 
 ## Access Credentials
 
