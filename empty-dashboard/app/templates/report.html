@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}{{ report.title }} - Report #{{ report.id }}{% endblock %}
+{% block page_title %}Report Details{% endblock %}
+
+{% block content %}
+<div class="report-view-container">
+    <div class="report-nav-header">
+        <a href="{{ url_for('reports.list_reports') }}" class="back-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back to Reports Archive</span>
+        </a>
+    </div>
+
+    <article class="report-card">
+        <header class="report-header">
+            <div class="report-badges">
+                <span class="badge badge-category">{{ report.category }}</span>
+                <span class="badge badge-id">Report #{{ report.id }}</span>
+                <span class="badge badge-status">Archived</span>
+            </div>
+            <h1 class="report-title">{{ report.title }}</h1>
+            <div class="report-meta">
+                <div class="meta-block">
+                    <span class="meta-label">Author</span>
+                    <span class="meta-value">{{ report.author_username or 'Automated Auditor' }}</span>
+                </div>
+                <div class="meta-block">
+                    <span class="meta-label">Timestamp</span>
+                    <span class="meta-value">{{ report.created_at }}</span>
+                </div>
+                <div class="meta-block">
+                    <span class="meta-label">Classification</span>
+                    <span class="meta-value">Internal Company Confidential</span>
+                </div>
+            </div>
+        </header>
+
+        {% if report.summary %}
+        <div class="report-summary-box">
+            <h3 class="summary-heading">Executive Summary</h3>
+            <p>{{ report.summary }}</p>
+        </div>
+        {% endif %}
+
+        {% if continuation_token %}
+        <div class="report-summary-box" style="border-left-color: var(--status-success); background: rgba(16, 185, 129, 0.08); margin-bottom: 24px;">
+            <h3 class="summary-heading" style="color: var(--status-success);">Export Authorization Continuation Token</h3>
+            <p style="margin-bottom: 12px;">This telemetry record contains an active session continuation token for audited ledger export dispatch.</p>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+                <code class="font-mono" style="font-size: 15px; color: var(--text-primary); font-weight: 700; background: var(--bg-app); padding: 8px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-medium);">{{ continuation_token }}</code>
+                <a href="{{ url_for('export.export_view', token=continuation_token) }}" class="btn btn-sm btn-primary">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span>Proceed to Export with Token</span>
+                </a>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="report-body">
+            <h3 class="section-heading">Detailed Findings & Observations</h3>
+            <div class="report-content-text">
+                {{ report.content or 'No detailed observations recorded for this report artifact.' }}
+            </div>
+        </div>
+
+        <footer class="report-footer">
+            <div class="audit-note">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                <span>Record cryptographically verified by internal telemetry log</span>
+            </div>
+            <a href="{{ url_for('export.export_view', report_id=report.id) }}" class="btn btn-secondary btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>Export Report Record</span>
+            </a>
+        </footer>
+    </article>
+</div>
+{% endblock %}

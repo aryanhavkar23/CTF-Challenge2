@@ -1,0 +1,11 @@
+.env
+venv/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.db
+data/*.db
+logs/
+ORGANIZER_SOLUTION.md
+ORGANIZER_TESTING.md

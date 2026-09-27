@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Export Confirmed - Telemetry Payload{% endblock %}
+{% block page_title %}Export Confirmed{% endblock %}
+
+{% block content %}
+<div class="report-view-container">
+    <div class="report-card">
+        <header class="report-header">
+            <div class="report-badges">
+                <span class="badge badge-category">Audited Export</span>
+                <span class="badge badge-id">{{ export_reference }}</span>
+                <span class="badge badge-status">Confirmed</span>
+            </div>
+            <h1 class="report-title">Audited Telemetry Ledger Package</h1>
+            <p class="text-secondary text-sm">
+                Cryptographic confirmation verified against internal session parameters and telemetry ingest sequence.
+            </p>
+        </header>
+
+        <div class="report-summary-box">
+            <h3 class="summary-heading">Verification Parameters</h3>
+            <p>Export Reference: <strong class="font-mono text-primary">{{ export_reference }}</strong></p>
+            <p>Verification Status: <strong class="text-success">Validated & Released</strong></p>
+        </div>
+
+        <div class="report-body">
+            <h3 class="section-heading">Encrypted Telemetry Payload & Clearance Key</h3>
+            <div class="flag-container" style="background: var(--bg-app); border: 1px solid var(--border-medium); border-radius: var(--radius-md); padding: 18px 24px; margin: 16px 0;">
+                <code class="font-mono" style="font-size: 16px; color: var(--brand-primary); font-weight: 700; word-break: break-all;">{{ flag }}</code>
+            </div>
+        </div>
+
+        <footer class="report-footer">
+            <div class="audit-note">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                <span>Authorization ledger confirmation complete</span>
+            </div>
+            <a href="{{ url_for('dashboard.dashboard_view') }}" class="btn btn-secondary btn-sm">
+                <span>Return to Dashboard</span>
+            </a>
+        </footer>
+    </div>
+</div>
+{% endblock %}

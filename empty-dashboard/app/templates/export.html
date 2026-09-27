@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Export Center{% endblock %}
+{% block page_title %}Data Export Center{% endblock %}
+
+{% block content %}
+<div class="export-container">
+    <div class="dashboard-header">
+        <div>
+            <h1 class="page-heading">Data Export & Serialization</h1>
+            <p class="page-subheading">Generate compliance summaries, raw telemetry dumps, and report packages.</p>
+        </div>
+    </div>
+
+    {% if export_reference %}
+    <div class="report-summary-box" style="border-left-color: var(--brand-primary); background: rgba(56, 189, 248, 0.08); margin-bottom: 24px;">
+        <h3 class="summary-heading" style="color: var(--brand-primary);">Audited Export Reference Generated</h3>
+        <p style="margin-bottom: 12px;">An authenticated telemetry export package has been staged under reference code: <strong class="font-mono text-primary">{{ export_reference }}</strong></p>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+            <code class="font-mono" style="font-size: 15px; color: var(--text-primary); font-weight: 700; background: var(--bg-app); padding: 8px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-medium);">{{ export_reference }}</code>
+            <a href="{{ url_for('export.confirm_export', ref=export_reference) }}" class="btn btn-sm btn-primary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Confirm & Release Telemetry Package</span>
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="export-grid">
+        <!-- Configuration Card -->
+        <div class="export-card">
+            <h2 class="card-title">Export Parameters</h2>
+            <form method="GET" action="{{ url_for('export.export_view') }}" class="export-form">
+                <div class="form-group">
+                    <label class="form-label" for="exportFormat">Serialization Format</label>
+                    <select id="exportFormat" name="format" class="form-control">
+                        <option value="json" selected>JSON (JavaScript Object Notation)</option>
+                        <option value="csv">CSV (Comma-Separated Values)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="dataset">Target Dataset</label>
+                    <select id="dataset" name="dataset" class="form-control">
+                        <option value="reports">Internal Reports Archive</option>
+                        <option value="metrics">Telemetry KPI Metrics</option>
+                        <option value="audit">Security Audit Trail</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="timeframe">Time Range</label>
+                    <select id="timeframe" name="timeframe" class="form-control">
+                        <option value="all">All Available Records</option>
+                        <option value="30d">Last 30 Days</option>
+                        <option value="7d">Last 7 Days</option>
+                        <option value="24h">Past 24 Hours</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <span>Download Export File</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Quick Presets Card -->
+        <div class="export-card">
+            <h2 class="card-title">Standard Output Packages</h2>
+            <p class="text-secondary text-sm">Download preconfigured enterprise dumps directly:</p>
+
+            <div class="preset-list">
+                <div class="preset-item">
+                    <div class="preset-info">
+                        <span class="preset-title">Reports Archive (JSON)</span>
+                        <span class="preset-desc">Complete published report records formatted as structured JSON</span>
+                    </div>
+                    <a href="{{ url_for('export.export_view', format='json') }}" class="btn btn-sm btn-secondary">
+                        JSON
+                    </a>
+                </div>
+
+                <div class="preset-item">
+                    <div class="preset-info">
+                        <span class="preset-title">Reports Archive (CSV)</span>
+                        <span class="preset-desc">Tabular summary for spreadsheet import and executive reporting</span>
+                    </div>
+                    <a href="{{ url_for('export.export_view', format='csv') }}" class="btn btn-sm btn-secondary">
+                        CSV
+                    </a>
+                </div>
+
+                <div class="preset-item">
+                    <div class="preset-info">
+                        <span class="preset-title">Live Telemetry API</span>
+                        <span class="preset-desc">Real-time JSON endpoint for external ingestion systems</span>
+                    </div>
+                    <a href="{{ url_for('api.api_dashboard') }}" target="_blank" class="btn btn-sm btn-subtle">
+                        API
+                    </a>
+                </div>
+            </div>
+
+            <div class="compliance-note">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <span>All exports are logged to the corporate audit ledger with analyst attribution.</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Reports Archive{% endblock %}
+{% block page_title %}Internal Reports{% endblock %}
+
+{% block content %}
+<div class="reports-container">
+    <div class="dashboard-header">
+        <div>
+            <h1 class="page-heading">Departmental Intelligence Reports</h1>
+            <p class="page-subheading">Archived compliance, telemetry, and quarterly operational summaries.</p>
+        </div>
+        <div class="header-actions">
+            <a href="{{ url_for('export.export_view') }}" class="btn btn-secondary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>Export Reports</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Search / Filter Bar -->
+    <div class="filter-bar">
+        <div class="filter-search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" class="form-control" placeholder="Search archive by report title or category..." disabled>
+        </div>
+        <div class="filter-controls">
+            <select class="form-control select-control" disabled>
+                <option>All Categories</option>
+                <option>Executive</option>
+                <option>Financial</option>
+                <option>Compliance</option>
+            </select>
+        </div>
+    </div>
+
+    {% if reports and reports_count > 0 %}
+    <div class="table-card">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Ref #</th>
+                    <th>Report Title</th>
+                    <th>Category</th>
+                    <th>Author</th>
+                    <th>Created</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in reports %}
+                <tr>
+                    <td class="font-mono">#{{ report.id }}</td>
+                    <td class="font-semibold">{{ report.title }}</td>
+                    <td><span class="badge badge-category">{{ report.category }}</span></td>
+                    <td>{{ report.author_username or 'System' }}</td>
+                    <td class="text-muted">{{ report.created_at }}</td>
+                    <td class="text-right">
+                        <a href="{{ url_for('reports.view_report', report_id=report.id) }}" class="btn btn-sm btn-subtle">
+                            View Report
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <!-- Empty Reports State -->
+    <div class="empty-state-card">
+        <div class="empty-state-graphic">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+        </div>
+        <h3 class="empty-state-title">No data available.</h3>
+        <p class="empty-state-description">
+            There are currently no reports published to your department archive. As automated ingest jobs compile quarterly audits, generated reports will be indexed here.
+        </p>
+        <div class="empty-state-actions">
+            <a href="{{ url_for('dashboard.dashboard_view') }}" class="btn btn-secondary btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                <span>Return to Dashboard</span>
+            </a>
+            <a href="{{ url_for('api.api_reports') }}" target="_blank" class="btn btn-subtle btn-sm">
+                <span>View Raw API Response</span>
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
